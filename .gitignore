@@ -1,26 +1,144 @@
-# Xcode
-#
-build/
-*.pbxuser
-!default.pbxuser
-*.mode1v3
-!default.mode1v3
-*.mode2v3
-!default.mode2v3
-*.perspectivev3
-!default.perspectivev3
-xcuserdata
-*.xccheckout
-*.moved-aside
-DerivedData
-*.hmap
-*.ipa
-*.xcuserstate
 
-# CocoaPods
-#
-# We recommend against adding the Pods directory to your .gitignore. However
-# you should judge for yourself, the pros and cons are mentioned at:
-# http://guides.cocoapods.org/using/using-cocoapods.html#should-i-ignore-the-pods-directory-in-source-control
-#
-# Pods/
+import UIKit
+
+class ViewController: UIViewController {
+
+// 1 * nought, 2 = crosses
+    
+var activePlayer = 1
+    
+var gameState = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+    
+var gameActive = true
+    
+var winningCombinations = [[0,1,2], [0,3,6], [0,4,8], [1,4,7], [2,5,8], [3,4,5], [6,7,8], [2,4,6]]
+    
+    @IBOutlet weak var gaveOver_Lbl: UILabel!
+    
+    
+    
+    @IBOutlet weak var playAgai_out: UIButton!
+    
+    
+    @IBAction func playAgain(sender: AnyObject) {
+        
+       activePlayer = 1
+        
+       gameState = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+        
+       gameActive = true
+        
+        var button: UIButton
+        
+        playAgai_out.hidden = true
+        
+        gaveOver_Lbl.hidden = true
+        
+        gaveOver_Lbl.center = CGPointMake(gaveOver_Lbl.center.x - 400, gaveOver_Lbl.center.y)
+        
+        playAgai_out.center = CGPointMake(playAgai_out.center.x - 400, playAgai_out.center.y)
+        
+        
+        for var i = 0 ; i < 9 ; i++ {
+            
+           
+            
+            button = view.viewWithTag(i) as UIButton
+            
+            button.setImage(nil, forState: .Normal)
+            
+            
+        }
+    
+    }
+    
+    @IBOutlet weak var btn1_Out: UIButton!
+    
+    @IBAction func button1(sender: AnyObject) {
+    
+       
+        if gameState[sender.tag] == 0 && gameActive == true {
+        
+            var image = UIImage()
+        
+            gameState[sender.tag] = activePlayer
+        
+            if activePlayer == 1 {
+        
+            image = UIImage(named: "cercle.png")!
+        
+            println(sender.tag)
+            
+            activePlayer = 2
+        
+            } else{
+            
+            image = UIImage(named: "croix.png")!
+            
+            println(sender.tag)
+            
+            activePlayer = 1
+            }
+        
+
+        sender.setImage(image, forState: .Normal)
+        
+        }
+     
+        for combination in  winningCombinations {
+            
+            if gameState[combination[0]] != 0 && gameState[combination[0]] == gameState[combination[1]] && gameState[combination[1]] == gameState[combination[2]] {
+                
+                println("Player \(gameState[combination[0]]) Won!")
+                
+                
+                gaveOver_Lbl.hidden = false
+                
+                gaveOver_Lbl.text =
+                    "Player \(gameState[combination[0]]) Won!"
+                
+                
+                 playAgai_out.hidden = false
+                
+                UIView.animateWithDuration(0.5, animations:{ () -> Void in
+                  
+                    self.gaveOver_Lbl.center = CGPointMake(self.gaveOver_Lbl.center.x + 400, self.gaveOver_Lbl.center.y)
+                    
+                    self.playAgai_out.center = CGPointMake(self.playAgai_out.center.x + 400, self.playAgai_out.center.y)
+
+                    
+                })
+                
+                gameActive = false
+                
+            }
+            
+        }
+            
+        
+    }
+    
+    
+    
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        gaveOver_Lbl.center = CGPointMake(gaveOver_Lbl.center.x - 400, gaveOver_Lbl.center.y)
+        
+        playAgai_out.center = CGPointMake(playAgai_out.center.x - 400, playAgai_out.center.y)
+
+        playAgai_out.hidden = true
+        
+        gaveOver_Lbl.hidden = true
+    }
+
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+    
+    
+
+}
+
